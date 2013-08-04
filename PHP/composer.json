@@ -1,0 +1,4 @@
+{
+	"require": {"slim/slim": "2.*", "rmccue/requests": ">=1.0"},
+	"minimum-stability": "dev"
+}

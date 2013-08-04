@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	</head>
+	<body>
+		<script src="superagent.js"></script>
+		<script src="cookie.min.js"></script>
+		<script>
+			var APP_KEY = '<YOUR APP KEY>';
+
+			// Note that this isn't cryptographically random!
+			function random_string() {
+				var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+				var s = '';
+				for (var i = 0; i < 22; i++) {
+					s += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+				}
+				return s;
+			}
+
+			function get_redirect_uri() {
+				return window.location.href.substring(0, window.location.href.length - window.location.hash.length).replace(/\/$/, '');
+			}
+
+			function parseqs(text) {
+				var split = text.split('&');
+				var params = {};
+				for (var i = 0; i < split.length; i++) {
+					var kv = split[i].split('=', 2);
+					params[kv[0]] = kv[1];
+				}
+				return params;
+			}
+
+			if (window.location.hash) {
+				var params = parseqs(window.location.hash.substring(1));
+				if (params.error) {
+					document.write("ERROR " + params.error + ": " + params.error_description.replace(/\+/g, ' '));
+				} else {
+					var csrf = cookie.get('csrf');
+					cookie.remove('csrf');
+					if (!csrf || params.state != csrf) {
+						document.write("ERROR: Possible CSRF attack.");
+					} else {
+						access_token = parseqs(window.location.hash.substring(1)).access_token;
+						superagent
+							.get('https://api.dropbox.com/1/account/info')
+							.set('Authorization', 'Bearer '+access_token)
+							.end(function (res) {
+								if (res.status === 200) {
+									document.write('Successfully authenticated as ' + JSON.parse(res.text)['display_name'] + '.');
+								}
+							});
+					}
+				}
+			} else {
+				var csrf = random_string();
+				cookie.set('csrf', csrf);
+				window.location = 'https://www.dropbox.com/1/oauth2/authorize?client_id='
+					+ encodeURIComponent(APP_KEY)
+					+ '&state=' + encodeURIComponent(csrf)
+					+ '&response_type=token&redirect_uri=' + encodeURIComponent(get_redirect_uri());
+			}
+		</script>
+	</body>
+</html>
