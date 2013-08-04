@@ -32,7 +32,10 @@ get '/callback' do
 		halt 401, 'Possible CSRF attack.'
 	end
 
-	response = RestClient.post("https://#{APP_KEY}:#{APP_SECRET}@api.dropbox.com/1/oauth2/token", { :code => params[:code], :redirect_uri => uri('/callback'), :grant_type => 'authorization_code' })
+	response = RestClient.post("https://#{APP_KEY}:#{APP_SECRET}@api.dropbox.com/1/oauth2/token", {
+		:code => params[:code],
+		:redirect_uri => uri('/callback'),
+		:grant_type => 'authorization_code' })
 	token = JSON.parse(response.to_str)['access_token']
 
 	info = JSON.parse(RestClient.get('https://api.dropbox.com/1/account/info', {:Authorization => "Bearer #{token}"}))
