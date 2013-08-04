@@ -12,14 +12,6 @@ APP_SECRET = '<YOUR APP SECRET>';
 
 @app.route('/')
 def index():
-	token = session.get('token')
-	if token is None:
-		return redirect(url_for('login'))
-	info = requests.get('https://api.dropbox.com/1/account/info', headers={'Authorization': 'Bearer %s' % token}).json()
-	return 'Successfully authenticated as %s.' % info['display_name']
-
-@app.route('/login')
-def login():
 	csrf_token = base64.urlsafe_b64encode(os.urandom(16))
 	session['csrf_token'] = csrf_token
 	return redirect('https://www.dropbox.com/1/oauth2/authorize?%s' % urllib.urlencode({
@@ -31,7 +23,7 @@ def login():
 
 @app.route('/callback')
 def callback():
-	if request.args['state'] != session['csrf_token']:
+	if request.args['state'] != session.pop('csrf_token'):
 		abort(403)
 	data = requests.post('https://api.dropbox.com/1/oauth2/token',
 		data={
@@ -40,13 +32,10 @@ def callback():
 			'redirect_uri': url_for('callback', _external=True)
 		},
 		auth=(APP_KEY, APP_SECRET)).json()
-	session['token'] = data['access_token']
-	return redirect(url_for('index'))
+	token = data['access_token']
 
-@app.route('/logout')
-def logout():
-	session.pop('token')
-	return redirect(url_for('index'))
+	info = requests.get('https://api.dropbox.com/1/account/info', headers={'Authorization': 'Bearer %s' % token}).json()
+	return 'Successfully authenticated as %s.' % info['display_name']
 
 if __name__=='__main__':
 	app.run(debug=True)
