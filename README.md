@@ -1,5 +1,5 @@
-OAuth 2 the Hard Way
---------------------
+Dropbox and OAuth 2 the Hard Way
+--------------------------------
 
 This project shows, in a variety of languages, how to authenticate a user and call the Dropbox API *without* using existing OAuth or Dropbox libraries.
 
