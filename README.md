@@ -5,14 +5,14 @@ This project shows, in a variety of languages, how to authenticate a user and ca
 
 Code is provided for the following languages:
 
-* [C#](C#) - ASP.NET MVC 4, HttpClient
-* [Java](Java) - Spark, HttpClient
-* [PHP](PHP) - Slim, Requests
-* [Python](Python) - Flask, Requests
+* [C#](C%23) - ASP.NET MVC 4, HttpClient
 * [Go](Go) - (no libraries)
+* [Java](Java) - Spark, HttpClient
 * [JavaScript (browser)](JavaScript) - Superagent
 * [JavaScript (Node.js)](Node.js) - Express, Request
+* [PHP](PHP) - Slim, Requests
 * [Perl](Perl) - Dancer, HTTP::Tiny
+* [Python](Python) - Flask, Requests
 * [Ruby](Ruby) - Sinatra, Rest-Client
 
 To run the samples, you'll need to [create a Dropbox API app](https://www.dropbox.com/developers/apps) and put your app key and secret into the code. You'll also need to set up the right OAuth 2 callback URL (`http://127.0.0.1:5000/callback` for most samples, `http://localhost:5000/callback` for C# and `http://127.0.0.1:5000` for JavaScript).
