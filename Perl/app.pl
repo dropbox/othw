@@ -1,5 +1,3 @@
-package oauth2;
-
 use strict;
 use warnings;
 use local::lib 'extlib';
