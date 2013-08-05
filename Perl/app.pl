@@ -6,8 +6,8 @@ use Bytes::Random::Secure qw(random_bytes_base64);
 use URI;
 use HTTP::Tiny;
 
-my $APP_KEY = "<YOUR APP KEY>";
-my $APP_SECRET = "<YOUR APP SECRET>";
+my $APP_KEY = '<YOUR APP KEY>';
+my $APP_SECRET = '<YOUR APP SECRET>';
 
 set 'port' => 5000;
 
@@ -42,10 +42,9 @@ get '/callback' => sub {
 	$response = $http->get('https://api.dropbox.com/1/account/info', {
 		headers => {Authorization => "Bearer $token"}
 	});
+	my $name = from_json($response->{content})->{display_name};
 
-	my $json = from_json($response->{content});
-
-	return "Successfully authenticated as $json->{display_name}.";
+	return "Successfully authenticated as $name.";
 };
 
 start;
