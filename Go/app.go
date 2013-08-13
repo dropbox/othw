@@ -53,9 +53,9 @@ func decodeResponse(r *http.Response, m interface{}) {
 func callback(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "csrf", MaxAge: -1})
 	r.ParseForm()
-	state, _ := r.Form["state"];
+	state := r.FormValue("state");
 	cookie, _ := r.Cookie("csrf")
-	if cookie == nil || state == nil || cookie.Value != state[0] {
+	if cookie == nil || cookie.Value != state {
 		w.WriteHeader(401)
 		fmt.Fprint(w, "Possible CSRF attack.")
 		return
