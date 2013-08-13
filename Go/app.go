@@ -61,19 +61,25 @@ func callback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, _ := http.PostForm(fmt.Sprintf("https://%s:%s@api.dropbox.com/1/oauth2/token", APP_KEY, APP_SECRET),
+	resp, err := http.PostForm(fmt.Sprintf("https://%s:%s@api.dropbox.com/1/oauth2/token", APP_KEY, APP_SECRET),
 		url.Values{
 			"redirect_uri": {getCallbackURL(r)},
 			"code": {r.Form["code"][0]},
 			"grant_type": {"authorization_code"},
 		})
+	if err != nil {
+		panic(err);
+	}
 	tokenMessage := struct { Access_token string }{}
 	decodeResponse(resp, &tokenMessage)
 	token := tokenMessage.Access_token
 
-	req, _ := http.NewRequest("GET", fmt.Sprintf("https://api.dropbox.com/1/account/info"), nil)
+	req, _ := http.NewRequest("GET", "https://api.dropbox.com/1/account/info", nil)
 	req.Header.Set("Authorization", "Bearer " + token)
-	resp, _ = http.DefaultClient.Do(req)
+	resp, err = http.DefaultClient.Do(req)
+	if err != nil {
+		panic(err)
+	}
 	nameMessage := struct { Display_name string }{}
 	decodeResponse(resp, &nameMessage)
 
