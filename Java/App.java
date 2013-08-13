@@ -87,7 +87,7 @@ public class App {
 							.addHeader("Authorization", "Bearer " + accessToken)
 							.execute().returnContent().asString());
 
-					return String.format("Logged in as %s.", json.get("display_name"));
+					return String.format("Successfully authenticated as %s.", json.get("display_name"));
 				} catch (Exception e) {
 					return "ERROR: " + e.toString();
 				}
