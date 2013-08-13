@@ -13,7 +13,7 @@ const APP_KEY = "<YOUR APP KEY>"
 const APP_SECRET = "<YOUR APP SECRET>"
 
 func getCallbackURL(r *http.Request) string {
-	var scheme string = "http"
+	scheme := "http"
 	forwarded := r.Header["X-Forwarded-Proto"]
 	if len(forwarded) > 0 {
 		scheme = forwarded[0]

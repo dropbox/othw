@@ -14,6 +14,7 @@ function generateCSRFToken() {
 	return crypto.randomBytes(18).toString('base64')
 		.replace(/\//g, '-').replace(/\+/g, '_');
 }
+
 function generateRedirectURI(req) {
 	return url.format({
 			protocol: req.protocol,
@@ -48,36 +49,35 @@ app.get('/callback', function (req, res) {
 		return res.status(401).send(
 			'CSRF token mismatch, possible cross-site request forgery attempt.'
 		);
-	} else {
-		// exchange access code for bearer token
-		request.post('https://api.dropbox.com/1/oauth2/token', {
-			form: {
-				code: req.query.code,
-				grant_type: 'authorization_code',
-				redirect_uri: generateRedirectURI(req)
-			},
-			auth: {
-				user: APP_KEY,
-				pass: APP_SECRET
-			}
-		}, function (error, response, body) {
-			var data = JSON.parse(body);
-
-			if (data.error) {
-				return res.send('ERROR: ' + data.error);
-			}
-
-			// extract bearer token
-			var token = data.access_token;
-
-			// use the bearer token to make API calls
-			request.get('https://api.dropbox.com/1/account/info', {
-				headers: { Authorization: 'Bearer ' + token }
-			}, function (error, response, body) {
-				res.send('Logged in successfully as ' + JSON.parse(body).display_name + '.');
-			});
-		});
 	}
+	// exchange access code for bearer token
+	request.post('https://api.dropbox.com/1/oauth2/token', {
+		form: {
+			code: req.query.code,
+			grant_type: 'authorization_code',
+			redirect_uri: generateRedirectURI(req)
+		},
+		auth: {
+			user: APP_KEY,
+			pass: APP_SECRET
+		}
+	}, function (error, response, body) {
+		var data = JSON.parse(body);
+
+		if (data.error) {
+			return res.send('ERROR: ' + data.error);
+		}
+
+		// extract bearer token
+		var token = data.access_token;
+
+		// use the bearer token to make API calls
+		request.get('https://api.dropbox.com/1/account/info', {
+			headers: { Authorization: 'Bearer ' + token }
+		}, function (error, response, body) {
+			res.send('Logged in successfully as ' + JSON.parse(body).display_name + '.');
+		});
+	});
 });
 
 app.listen(5000);

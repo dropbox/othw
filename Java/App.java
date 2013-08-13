@@ -22,7 +22,7 @@ public class App {
 	}
 
 	public static String getRedirectURI(spark.Request request) throws URISyntaxException {
-		return 	new URIBuilder(request.url()).setPath("/callback").build().toString();
+		return new URIBuilder(request.url()).setPath("/callback").build().toString();
 	}
 
 	public static void main(String[] args) throws Exception {
