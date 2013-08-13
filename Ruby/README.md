@@ -1,6 +1,6 @@
 # Prerequisites
 
-* [Ruby 1.9+](http://www.ruby-lang.org)
+* [Ruby 1.8.7+](http://www.ruby-lang.org)
 * [Bundler](http://bundler.io/)
 
 # Setup
