@@ -40,5 +40,5 @@ get '/callback' do
 
 	info = JSON.parse(RestClient.get 'https://api.dropbox.com/1/account/info', :Authorization => "Bearer #{token}")
 
-	"Successfully logged in as #{info['display_name']}." 
+	"Successfully authenticated as #{info['display_name']}." 
 end
