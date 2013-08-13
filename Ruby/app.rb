@@ -13,7 +13,7 @@ APP_KEY = '<YOUR APP KEY>'
 APP_SECRET = '<YOUR APP SECRET>'
 
 get '/' do
-	csrf_token = SecureRandom.base64(18)
+	csrf_token = SecureRandom.base64(16).tr('+/', '-_').gsub(/=*$/, '')
 	session[:csrf] = csrf_token
 
 	params = {
@@ -22,8 +22,8 @@ get '/' do
 		:redirect_uri => uri('/callback'),
 		:state => csrf_token
 	}
-	qs = params.collect { |k, v| "#{k.to_s}=#{CGI::escape(v.to_s)}" }.join('&')
-	redirect("https://www.dropbox.com/1/oauth2/authorize?#{qs}")
+	qs = params.map { |k, v| "#{k.to_s}=#{CGI.escape(v.to_s)}" }.join '&'
+	redirect "https://www.dropbox.com/1/oauth2/authorize?#{qs}"
 end
 
 get '/callback' do
@@ -32,13 +32,13 @@ get '/callback' do
 		halt 401, 'Possible CSRF attack.'
 	end
 
-	response = RestClient.post("https://#{APP_KEY}:#{APP_SECRET}@api.dropbox.com/1/oauth2/token", {
+	response = RestClient.post "https://#{APP_KEY}:#{APP_SECRET}@api.dropbox.com/1/oauth2/token",
 		:code => params[:code],
 		:redirect_uri => uri('/callback'),
-		:grant_type => 'authorization_code' })
+		:grant_type => 'authorization_code'
 	token = JSON.parse(response.to_str)['access_token']
 
-	info = JSON.parse(RestClient.get('https://api.dropbox.com/1/account/info', {:Authorization => "Bearer #{token}"}))
+	info = JSON.parse(RestClient.get 'https://api.dropbox.com/1/account/info', :Authorization => "Bearer #{token}")
 
 	"Successfully logged in as #{info['display_name']}." 
 end
