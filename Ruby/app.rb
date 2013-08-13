@@ -22,8 +22,8 @@ get '/' do
 		:redirect_uri => uri('/callback'),
 		:state => csrf_token
 	}
-	qs = params.map { |k, v| "#{k.to_s}=#{CGI.escape(v.to_s)}" }.join '&'
-	redirect "https://www.dropbox.com/1/oauth2/authorize?#{qs}"
+	query = params.map { |k, v| "#{k.to_s}=#{CGI.escape(v.to_s)}" }.join '&'
+	redirect "https://www.dropbox.com/1/oauth2/authorize?#{query}"
 end
 
 get '/callback' do
@@ -38,7 +38,7 @@ get '/callback' do
 		:grant_type => 'authorization_code'
 	token = JSON.parse(response.to_str)['access_token']
 
-	info = JSON.parse(RestClient.get 'https://api.dropbox.com/1/account/info', :Authorization => "Bearer #{token}")
+	info = JSON.parse(RestClient.get('https://api.dropbox.com/1/account/info', :Authorization => "Bearer #{token}"))
 
 	"Successfully authenticated as #{info['display_name']}." 
 end
