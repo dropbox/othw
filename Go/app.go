@@ -14,9 +14,9 @@ const APP_SECRET = "<YOUR APP SECRET>"
 
 func getCallbackURL(r *http.Request) string {
 	scheme := "http"
-	forwarded := r.Header["X-Forwarded-Proto"]
+	forwarded := r.Header.Get("X-Forwarded-Proto")
 	if len(forwarded) > 0 {
-		scheme = forwarded[0]
+		scheme = forwarded
 	}
 	return (&url.URL{
 		Scheme: scheme,
@@ -52,7 +52,6 @@ func decodeResponse(r *http.Response, m interface{}) {
 
 func callback(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &http.Cookie{Name: "csrf", MaxAge: -1})
-	r.ParseForm()
 	state := r.FormValue("state");
 	cookie, _ := r.Cookie("csrf")
 	if cookie == nil || cookie.Value != state {
