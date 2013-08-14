@@ -55,15 +55,14 @@ func callback(w http.ResponseWriter, r *http.Request) {
 	state := r.FormValue("state");
 	cookie, _ := r.Cookie("csrf")
 	if cookie == nil || cookie.Value != state {
-		w.WriteHeader(401)
-		fmt.Fprint(w, "Possible CSRF attack.")
+		http.Error(w, "Possible CSRF attack.", http.StatusUnauthorized);
 		return
 	}
 
 	resp, err := http.PostForm(fmt.Sprintf("https://%s:%s@api.dropbox.com/1/oauth2/token", APP_KEY, APP_SECRET),
 		url.Values{
 			"redirect_uri": {getCallbackURL(r)},
-			"code": {r.Form["code"][0]},
+			"code": {r.FormValue("code")},
 			"grant_type": {"authorization_code"},
 		})
 	if err != nil {
