@@ -12,7 +12,7 @@ APP_SECRET = '<YOUR APP SECRET>';
 
 @app.route('/')
 def index():
-	csrf_token = base64.urlsafe_b64encode(os.urandom(16))
+	csrf_token = base64.urlsafe_b64encode(os.urandom(18))
 	session['csrf_token'] = csrf_token
 	return redirect('https://www.dropbox.com/1/oauth2/authorize?%s' % urllib.urlencode({
 		'client_id': APP_KEY,

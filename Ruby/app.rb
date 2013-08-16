@@ -13,7 +13,7 @@ APP_KEY = '<YOUR APP KEY>'
 APP_SECRET = '<YOUR APP SECRET>'
 
 get '/' do
-	csrf_token = SecureRandom.base64(16).tr('+/', '-_').gsub(/=*$/, '')
+	csrf_token = SecureRandom.base64(18).tr('+/', '-_').gsub(/=*$/, '')
 	session[:csrf] = csrf_token
 
 	params = {

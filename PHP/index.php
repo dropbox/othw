@@ -16,7 +16,7 @@
 	}
 	// Generate a random token used for CSRF protection.
 	function generateCSRFToken() {
-		return base64url_encode(openssl_random_pseudo_bytes(16));
+		return base64url_encode(openssl_random_pseudo_bytes(18));
 	}
 
 	// Generate a redirect URI corresponding to the given route.
