@@ -36,22 +36,22 @@
 				var params = parseqs(window.location.hash.substring(1));
 				if (params.error) {
 					document.write("ERROR " + params.error + ": " + params.error_description.replace(/\+/g, ' '));
-					return;
-				}
-				var csrf = cookie.get('csrf');
-				cookie.remove('csrf');
-				if (!csrf || params.state != csrf) {
-					document.write("ERROR: Possible CSRF attack.");
 				} else {
-					access_token = parseqs(window.location.hash.substring(1)).access_token;
-					superagent
-						.get('https://api.dropbox.com/1/account/info')
-						.set('Authorization', 'Bearer '+access_token)
-						.end(function (res) {
-							if (res.status === 200) {
-								document.write('Successfully authenticated as ' + JSON.parse(res.text)['display_name'] + '.');
-							}
-						});
+					var csrf = cookie.get('csrf');
+					cookie.remove('csrf');
+					if (!csrf || params.state != csrf) {
+						document.write("ERROR: Possible CSRF attack.");
+					} else {
+						access_token = parseqs(window.location.hash.substring(1)).access_token;
+						superagent
+							.get('https://api.dropbox.com/1/account/info')
+							.set('Authorization', 'Bearer '+access_token)
+							.end(function (res) {
+								if (res.status === 200) {
+									document.write('Successfully authenticated as ' + JSON.parse(res.text)['display_name'] + '.');
+								}
+							});
+					}
 				}
 			} else {
 				var csrf = random_string();
