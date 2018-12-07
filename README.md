@@ -34,4 +34,4 @@ Good question! I'm not an expert in most of these languages&mdash;for example, t
 What about language X?
 ----------------------
 
-Let me know ([@smarx](https://twitter.com/smarx), [smarx@dropbox.com](mailto:smarx@dropbox.com)) if there's another language you'd like to see a sample for. Better yet, write it yourself and send me a pull request!
+Let me know by [opening an issue](https://github.com/dropbox/othw/issues) if there's another language you'd like to see a sample for. Better yet, write it yourself and send a pull request!
