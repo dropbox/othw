@@ -1,3 +1,5 @@
+**Note: The samples in this repo use the /1/account/info endpoint in Dropbox API v1, which has been retired. [Learn more.](https://blogs.dropbox.com/developers/2017/09/api-v1-shutdown-details/) The OAuth 2 implementations can still be used for [Dropbox API v2](https://www.dropbox.com/developers) though.**
+
 Dropbox and OAuth 2 the Hard Way
 --------------------------------
 
